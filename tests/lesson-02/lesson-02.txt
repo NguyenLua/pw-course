@@ -1,0 +1,26 @@
+1. Giải thích các câu lệnh sau:
+a. git Init : khởi tạo 1 thử mục được quản lý bởi git
+b. git add <file_name> : thêm một file cụ thể vào khu vực chuẩn bị (Staging) để chuẩn bị commit
+c. git add . : thêm tất cả các file đã thay đổi vào khu vực chuẩn bị (Staging) để chuẩn bị commit
+d. git commit -m "message"  : Tạo một bản commit với message mô tả để ghi lại các thay đổi đã add.
+2. 
+a. Tạo 3 file: file1, file2,file3
+    *  Working Directory: file1, file2, file3.
+b. Chạy lệnh: git Init
+    *  Tạo repo rỗng
+c. Chạy lệnh: git commit -m"init project".
+    * Working Directory: file1,file2,file3.
+    * Staging area: rỗng.
+    * Repository : rỗng.
+d. Chạy lệnh: git add file1
+    * Working Directory : file1,file2,file3.
+    * Staging Area: file1
+    * Repository: rỗng
+e. Chạy lệnh: git commit -m"add file1"
+    * Working Directory : file1,file2,file3.
+    * Staging Area: rỗng
+    * Repository: file1
+f. Chạy lệnh: git add file.
+    * Working Directory : file1,file2,file3.
+    * Staging Area: rỗng .Chạy lệnh báo lỗi không có file.
+    * Repository: rỗng
