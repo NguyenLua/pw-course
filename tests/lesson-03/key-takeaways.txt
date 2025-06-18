@@ -1,0 +1,77 @@
+Key Takeaways - Lesson 03: Git & Javascript Basic (Continue)
+
+1. Git - Undo Actions:
+
+- Sửa lại nội dung commit message: git commit --amend
+- Gỡ file ra khỏi staging area: git restore --staged
+- Gỡ commit gần nhất (undo commit): git reset HEAD~1
+
+2. Git - Branching Model:
+
+- Tạo nhánh mới: git branch <ten_branch>
+- Chuyển sang nhánh mới: git checkout <ten_branch> hoặc git checkout -b <ten_branch>
+- Luôn tạo branch mới trước khi làm các thay đổi lớn hoặc copy code từ Internet.
+
+3. Git - .gitignore:
+
+- Sử dụng file .gitignore để bỏ qua các file hoặc thư mục không cần quản lý bằng git.
+- Bỏ qua file: <file_name>
+- Bỏ qua folder: /
+
+4. Javascript - Quy tắc đặt tên biến (Convention):
+
+- snake_case: chưa dùng
+- kebab-case: dùng cho tên file
+- camelCase: dùng cho tên biến
+- PascalCase: dùng cho tên class
+
+5. Javascript - Console log:
+
+- Sử dụng console.log với nhiều cách nối chuỗi: dấu ', ", template string `${}`.
+
+6. Javascript - Object:
+
+- Khai báo object với cú pháp: let/const  = { : , ... }
+- Có thể lồng object bên trong object.
+- Truy cập property bằng dot notation (object.property) hoặc bracket notation (object["property"]).
+- Gán lại giá trị property sau khi khai báo.
+
+7. Javascript - Logical Operator:
+
+- && : Cả hai điều kiện đúng.
+- || : Một trong hai điều kiện đúng.
+- ! : Phủ định điều kiện.
+
+8. Javascript - Array:
+
+- Khai báo mảng bằng []
+- Truy cập phần tử theo chỉ số (index).
+- Lấy độ dài mảng: array.length
+
+9. Javascript - Function:
+
+- Cú pháp khai báo hàm: function <tênHàm>() { ... }
+- Có thể truyền tham số và trả về giá trị bằng return.
+
+10. Javascript - Phạm vi biến (Scope):
+
+- Global scope: ngoài hàm.
+- Block scope: bên trong {}.
+- Biến var và let có phạm vi khác nhau.
+
+11. Javascript - Câu lệnh điều kiện nâng cao:
+
+- if, if...else, if...else if, switch...case
+
+12. Javascript - So sánh lỏng lẻo vs tuyệt đối:
+
+- \== và != : so sánh lỏng lẻo, tự convert kiểu dữ liệu.
+- \=== và !== : so sánh tuyệt đối cả giá trị và kiểu dữ liệu.
+
+13. Javascript - Vòng lặp nâng cao:
+
+- for...in: duyệt key (chủ yếu cho object)
+- for...of: duyệt giá trị (chủ yếu cho array)
+- forEach: duyệt từng phần tử của array
+- break và continue để điều khiển vòng lặp.
+
