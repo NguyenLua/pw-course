@@ -1,0 +1,52 @@
+1. 
+git commit --amend: Sửa lại nội dung commit gần nhất. Nếu chưa có option -m, sẽ mở trình soạn thảo để sửa lại message.
+git reset HEAD ~3:  Gỡ 3 commit gần nhất.
+2. Liệt kê các commit và các file theo từng vùng ở các branch: main, feature-A, feature-B sau khi thao tác các lệnh sau:
+
+a. Tạo thư mục lesson-8
+    * Repo chưa được quản lý bởi git.
+b. Tạo file: file1, file2, file3
+    * Repo chưa được quản lý bởi git.
+c. Chạy lệnh: git init
+    * Khởi tạo repo git
+    * Working Directory: thu muc lesson-8
+    * Staging Area: rỗng
+    * Repository: rỗng
+d. Chạy lệnh: git add file1
+    * Working Directory: file1
+    * Staging Area: file1
+    * Repository: rỗng
+e. Chạy lệnh: git commit -m "init project"
+    * Working Directory: file1
+    * Staging Area: rỗng
+    * Repository: file1
+f. Chạy lệnh: git checkout -b feat/feature-A
+    * tạo và rẻ sang nhanh mới feature-A
+g. Chạy lệnh: git add file2
+    * Branch: feature-A
+    * Working Directory: file2
+    * Staging Area: file2,file1
+    * Repository: rỗng
+h. Chạy lệnh: git commit -m "feat: add file2"
+    * Branch: feature-A
+    * Working Directory: file2,file1
+    * Staging Area: rỗng
+    * Repository: file2,file1
+i. Chạy lệnh: git add file3
+    * Branch: feature-A
+    * Working Directory: file1,file2,file3
+    * Staging Area: file3
+    * Repository: file2,file1
+j. Chạy lệnh: git commit -m "feat: add file3"
+    * Branch: feature-A
+    * Working Directory: file1,file2,file3
+    * Staging Area: rỗng
+    * Repository: file2,file3
+k. Chạy lệnh: git checkout -b feat/feature-B
+    * tạo và rẻ sang nhanh mới feature-B
+    * Repository: file1, file2, file3
+l. Chạy lệnh: git reset HEAD~2
+    * Branch: feature-B
+    * Working Directory: file1, file2, file3 (vẫn còn)
+    * Staging Area: rỗng
+    * Repository: chỉ còn commit "init project" (file1)
