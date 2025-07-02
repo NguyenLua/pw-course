@@ -1,26 +1,14 @@
 import { expect, test } from '@playwright/test';
-import { beforeEach } from 'node:test';
-import { login } from './login';
+import { HomePage } from '../../pages/home-page';
+import { LoginPage } from '../../pages/login-page';
+import { TagsPage } from '../../pages/tags-page';
+import { DoLoginSuccess } from '../helpers/auth.helper';
 
 test.describe('POST - Post/Tags', async () => {
-    //Element
-    const posts = '//*[@class="wp-menu-image dashicons-before dashicons-admin-post"]';
-    const tags = '//a[contains(text(),"Tags")]';
-    const btnAddTag = '//*[@id = "submit"]';
-    const noticeError = '//*[@class = "notice notice-error"]';
-    const addTagName = '//*[@id = "tag-name"]';
-    const slug = '//*[@id="tag-slug"]';
-    const noticeSuccess = '//*[@class="notice notice-success is-dismissible"]';
-    const itemTag1 = '//tr[.//a[text()="tag Nguyen Lua"]]//a[@class="row-title"]';
-    const itemTag2 = '//tr[.//a[text()="tag Nguyen Lua 02"]]//a[@class="row-title"]';
-    const itemTag3 = '//tr[.//a[text()="tag Nguyen Lua 03"]]//a[@class="row-title"]';
-    const deleteTag = '//*[@id ="delete-link"]';
-    const search = '//*[@id="tag-search-input"]';
-    const searchSubmit = '//*[@id="search-submit"]';
+    let homePage: HomePage;
+    let tagsPage: TagsPage;
 
     //Data Lgoin Success.
-    let userNameS = 'p103-lua';
-    let passwordS = 'xyg&7E9uQSavPoQIUF7Jl0bw';
     let newTagNameF = 'lesson tag';
     let newTagName01 = 'tag Nguyen Lua';
     let newTagName02 = 'tag Nguyen Lua 02';
@@ -30,9 +18,10 @@ test.describe('POST - Post/Tags', async () => {
     let textSearch = 'nguyen';
 
     test.beforeEach(async ({ page }) => {
-        await login(page, userNameS, passwordS);
-        await page.locator(posts).click();
-        await page.locator(tags).click();
+        await DoLoginSuccess(page);
+        homePage = new HomePage(page);
+        await homePage.categoryPost();
+        await homePage.goToTagsScreen();
     });
 
     test('@POST_TAG_001 - Tag - add tag failed', async ({ page }) => {

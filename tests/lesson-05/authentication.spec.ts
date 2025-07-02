@@ -1,38 +1,35 @@
 import { expect, test } from '@playwright/test';
-import { beforeEach } from 'node:test';
-import { login } from './login';
+import { LoginPage } from '../../pages/login-page';
+import { HomePage } from '../../pages/home-page';
+import { DoLoginSuccess } from '../../tests/helpers/auth.helper';
 
 test.describe('AUTH - Authentication', async () => {
-    //Find Element.
-    const tfUserName = '//*[@id="user_login"]';
-    const tfPassword = '//*[@id="user_pass"]';
-    const btnLogIn = '//*[@id="wp-submit"]';
-    const loginError = '//*[@id="login_error"]';
-    const dashboard = '//h1[contains(text(),"Dashboard")]';
-    const ataGlance = '//h2[contains(text(),"At a Glance")]';
-    const activity = '//h2[contains(text(),"Activity")]';
+    let loginPage: LoginPage;
 
     //Data Login Fail.
-    let userNameF = 'p103-lua-1';
-    let passwordF = '1234567890';
-
-    //Data Lgoin Success.
-    let userNameS = 'p103-lua';
-    let passwordS = 'xyg&7E9uQSavPoQIUF7Jl0bw';
+    const userNameFail = 'p103-lua-1';
+    const passwordFail = '1234567890';
+    const url = 'https://pw-practice-dev.playwrightvn.com/wp-admin';
 
     test('@AUTH_001 - Login fail', async ({ page }) => {
-        await login(page, userNameF, passwordF);
+        loginPage = new LoginPage(url, page);
+        test.step('Open Login Page', async () => {
+            await loginPage.goToWebsite(url);
+        })
+        test.step('Nhập vào thông tin username, password bị sai', async () => {
+            await loginPage.inputUserLogin(userNameFail);
+            await loginPage.inputPassword(passwordFail);
+        });
 
-        //Show error message.
-        await expect(await page.locator(loginError)).toContainText(`The username ${userNameF} is not registered on this site`);
+        test.step('Click button login', async () => {
+            await loginPage.clickButtonLogin();
+
+            //Result
+            await loginPage.checkLoginfail(userNameFail);
+        });
     });
 
     test('@AUTH_002 - Login success', async ({ page }) => {
-        await login(page, userNameS, passwordS);
-
-        //Check result.
-        await expect(await page.locator(dashboard)).toContainText('Dashboard');
-        await expect(await page.locator(ataGlance)).toContainText('At a Glance');
-        await expect(await page.locator(activity)).toContainText('Activity');
-    })
+        await DoLoginSuccess(page);
+    });
 })
