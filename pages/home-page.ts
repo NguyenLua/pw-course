@@ -8,6 +8,7 @@ export class HomePage {
     xpathActivity = '//h2[contains(text(),"Activity")]';
     xpathPosts = '//*[@class="wp-menu-image dashicons-before dashicons-admin-post"]';
     xpathTags = '//a[contains(text(),"Tags")]';
+    xpathcategories = '//a[contains(text(),"Categories")]';
 
     constructor(page: Page) {
         this.page = page;
@@ -26,4 +27,7 @@ export class HomePage {
         await this.page.locator(this.xpathTags).click();
     }
 
+    async goToCategoryScreen() {
+        await this.page.locator(this.xpathcategories).click();
+    }
 }

@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import { HomePage } from '../../pages/home-page';
 import { TagsPage } from '../../pages/tags-page';
 import { DoLoginSuccess } from '../helpers/auth.helper';
+import { CategoriesPage } from '../../pages/category-page';
 
 test.describe('POST - Post/Tags', async () => {
     let homePage: HomePage;
@@ -106,19 +107,8 @@ test.describe('POST - Post/Tags', async () => {
 });
 
 test.describe('POST - Post/Category', async () => {
-    //Element
-    const posts = '//*[@class="wp-menu-image dashicons-before dashicons-admin-post"]';
-    const categories = '//a[contains(text(),"Categories")]';
-    const tfNameCategory = '//*[@id="tag-name"]';
-    const tfSlugCategory = '//*[@id="tag-slug"]';
-    const selectParent = '//*[@id="parent"]';
-    const btnAddCategory = '//*[@id="submit"]';
-    const noticeSuccess = '//*[@class="notice notice-success is-dismissible"]';
-    const tfSearch = '//*[@id="tag-search-input"]';
-    const btnSearch = '//*[@id="search-submit"]';
-    const itemcategory01 = '//tr[.//a[text()="category nguyen lua 03"]]//a[@class="row-title"]';
-    const itemcategory02 = '//tr[.//a[text()="category nguyen lua 04"]]//a[@class="row-title"]';
-    const deleteTag = '//*[@id ="delete-link"]';
+    let homePage: HomePage;
+    let categoriesPage: CategoriesPage;
 
     //Data Lgoin Success.
     let userNameS = 'p103-lua';
@@ -128,53 +118,51 @@ test.describe('POST - Post/Category', async () => {
     let nameCategory02 = 'category nguyen lua 04';
     let selectParent02 = 'k11 class';
     let keySearch = 'nguyen';
+    const noticeSuccess = 'Category added.';
 
     test.beforeEach(async ({ page }) => {
-        await login(page, userNameS, passwordS);
-        await page.locator(posts).click();
-        await page.locator(categories).click();
+        await DoLoginSuccess(page);
+        homePage = new HomePage(page);
+        await homePage.categoryPost();
+        await homePage.goToCategoryScreen();
     });
 
     test('@POST_CATEGORY_001 - Category - create category success', async ({ page }) => {
-        await test.step('step 1', async () => {
-            await page.locator(tfNameCategory).waitFor();
-            await page.locator(tfNameCategory).click();
-            await page.locator(tfNameCategory).fill(nameCategory01);
-            await page.locator(tfSlugCategory).waitFor();
-            await page.locator(tfSlugCategory).click();
-            await page.locator(tfSlugCategory).fill(slugCategory01);
-            await page.locator(btnAddCategory).click();
-            await expect(await page.locator(noticeSuccess)).toContainText('Category added.');
+        categoriesPage = new CategoriesPage(page);
+        await test.step('Điền thông tin category: name = "category {name} 03", slug = "Đây là category đặc biệt @100 $200"', async () => {
+            await categoriesPage.inputNameCategory(nameCategory01);
+            await categoriesPage.inputSlugCategory(slugCategory01);
+            await categoriesPage.clickButtonAddCatetory();
+
+            //Result
+            await categoriesPage.addCategorySuccess(noticeSuccess);
         });
 
-        await test.step('step 2', async () => {
-            await page.locator(tfNameCategory).waitFor();
-            await page.locator(tfNameCategory).click();
-            await page.locator(tfNameCategory).fill(nameCategory02);
-            await page.locator(selectParent).waitFor();
-            await page.locator(selectParent).click();
-            await page.locator(selectParent).selectOption(selectParent02);
-            await page.locator(btnAddCategory).click();
-            await expect(await page.locator(noticeSuccess)).toContainText('Category added.');
+        await test.step('Điền thông tin category: name = "category {name} 04", parent = "K11 class"', async () => {
+            await categoriesPage.inputNameCategory(nameCategory02);
+            await categoriesPage.inputSlugCategory(selectParent02);
+            await categoriesPage.clickButtonAddCatetory();
+
+            //Result
+            await categoriesPage.addCategorySuccess(noticeSuccess);
         });
 
-        await test.step('step 3', async () => {
+        await test.step('Teardown: xoá các dữ liệu đã thêm vào', async () => {
             page.on('dialog', async (dialog) => {
                 await dialog.accept();  // Tự động click OK
             });
 
-            await page.locator(tfSearch).waitFor();
-            await page.locator(tfSearch).fill(keySearch);
-            await page.locator(btnSearch).click();
-            await page.locator(itemcategory01).waitFor();
-            await page.locator(itemcategory01).click();
-            await page.locator(deleteTag).click();
-            await page.locator(tfSearch).waitFor();
-            await page.locator(tfSearch).fill(keySearch);
-            await page.locator(btnSearch).click();
-            await page.locator(itemcategory02).waitFor();
-            await page.locator(itemcategory02).click();
-            await page.locator(deleteTag).click();
+            await categoriesPage.inputSearch(keySearch);
+            await categoriesPage.clickButtonSearchSubmit();
+
+            //delete category 1
+            await categoriesPage.viewDetailCategory1();
+            await categoriesPage.deleteItem();
+
+
+            //delete category 2
+            await categoriesPage.viewDetailCategory2();
+            await categoriesPage.deleteItem();
         });
     });
 });
