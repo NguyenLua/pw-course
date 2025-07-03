@@ -1,50 +1,44 @@
 import { expect, test } from '@playwright/test';
-import { beforeEach } from 'node:test';
-import { login } from './login';
-import path from 'path';
+import { HomePage } from '../../pages/home-page';
+import { DoLoginSuccess } from '../helpers/auth.helper';
+import { LibrariesPage } from '../../pages/library-page';
+
 
 test.describe('POST - Post', async () => {
-    //Element
-    const menu = '//*[@id ="wp-admin-bar-menu-toggle"]';
-    const media = '//div[contains(text(),"Media")]';
-    const library = '//a[@class="wp-first-item current"]';
-    const btnAddMediaFile = '//*[@id="wp-media-grid"]//a[contains(text(),"Add Media File")]';
-    const btnSelectFiles = '//*[@class="browser button button-hero"]';
-    const inputFile = '//input[@type = "file"]';
-    const nameFile = '//div[@class ="filename"]//div[contains(text(),"lua.txt")]//ancestor::li';
-    const btnDelete = '//*[@class="button-link delete-attachment"]';
+    let homePage: HomePage;
+    let libraryPage: LibrariesPage;
 
     //Data Lgoin Success.
     const userNameS = 'p103-lua';
     const passwordS = 'xyg&7E9uQSavPoQIUF7Jl0bw';
     const file = 'tests/lesson-05/lua.txt';
-    const name = 'lua.txt';
+    const nameFile = 'lua.txt';
 
     test.beforeEach(async ({ page }) => {
-        await login(page, userNameS, passwordS);
-        await page.locator(media).click();
-        await page.locator(library).click();
+        await DoLoginSuccess(page);
+        homePage = new HomePage(page);
+        await homePage.categoryMedia();
+        await homePage.goToLibraryScreen();
     });
 
     test('@MEDIA_FILES_001 - Media - upload file success', async ({ page }) => {
-        await test.step('step 1', async () => {
-            await page.locator(btnAddMediaFile).waitFor();
-            await page.locator(btnAddMediaFile).click();
-            await page.locator(inputFile).setInputFiles(file);
+        libraryPage = new LibrariesPage(page);
+        await test.step('Tạo file `${name}.txt` bằng tay trong thư mục test của bài học hiện tại.Thực hiện upload file', async () => {
+            await libraryPage.uploadFile(file);
         });
 
-        await test.step('step 2', async () => {
+        await test.step('F5 trang', async () => {
             await page.reload();
-            await expect(await page.locator(nameFile)).toContainText(name);
+            await libraryPage.uploadFileSuccess(nameFile);
         });
 
-        await test.step('step 2', async () => {
+        await test.step('Teardown: xoá các dữ liệu đã thêm vào', async () => {
             page.on('dialog', async (dialog) => {
                 await dialog.accept();  // Tự động click OK
             });
-            await page.locator(nameFile).click();
-            await page.locator(btnDelete).click()
 
+            await libraryPage.viewDetailsFile();
+            await libraryPage.deleteFile();
         });
     });
 })
