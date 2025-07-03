@@ -34,6 +34,32 @@ export class TagsPage {
     async clickButtonAddTag() {
         await this.page.locator(this.xpathButtonAddTag).click();
     }
+    async inputSearch(textSearch: string) {
+        await this.page.locator(this.xpathSearch).waitFor();
+        await this.page.locator(this.xpathSearch).fill(textSearch);
+    }
+    async clickButtonSearchSubmit() {
+        await this.page.locator(this.xpathButtonSearchSubmit).click();
+    }
+
+    async viewDetailItem1() {
+        await this.page.locator(this.xpathItemTag1).waitFor();
+        await this.page.locator(this.xpathItemTag1).click();
+    }
+
+    async viewDetailItem2() {
+        await this.page.locator(this.xpathItemTag2).waitFor();
+        await this.page.locator(this.xpathItemTag2).click();
+    }
+
+    async viewDetailItem3() {
+        await this.page.locator(this.xpathItemTag3).waitFor();
+        await this.page.locator(this.xpathItemTag3).click();
+    }
+
+    async deleteItem() {
+        await this.page.locator(this.xpathButtonDeleteTag).click();
+    }
 
     //result
     async addTagFail(errorMessage: string) {

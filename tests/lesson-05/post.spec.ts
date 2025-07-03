@@ -1,6 +1,5 @@
 import { expect, test } from '@playwright/test';
 import { HomePage } from '../../pages/home-page';
-import { LoginPage } from '../../pages/login-page';
 import { TagsPage } from '../../pages/tags-page';
 import { DoLoginSuccess } from '../helpers/auth.helper';
 
@@ -9,13 +8,16 @@ test.describe('POST - Post/Tags', async () => {
     let tagsPage: TagsPage;
 
     //Data Lgoin Success.
-    let newTagNameF = 'lesson tag';
+    let newTagNameFail = 'lesson tag';
     let newTagName01 = 'tag Nguyen Lua';
     let newTagName02 = 'tag Nguyen Lua 02';
     let slug02 = 'tag-nguyen-lua-02';
     let newTagName03 = 'tag Nguyen Lua 03';
     let slug03 = 'Đây là tag đặc biệt @100 $200';
     let textSearch = 'nguyen';
+    const errorMessageRequiredField = 'A name is required for this term.';
+    const errorMessageDuplicate = 'A term with the name provided already exists in this taxonomy.';
+    const messageAddSuccess = 'Tag added.';
 
     test.beforeEach(async ({ page }) => {
         await DoLoginSuccess(page);
@@ -25,85 +27,80 @@ test.describe('POST - Post/Tags', async () => {
     });
 
     test('@POST_TAG_001 - Tag - add tag failed', async ({ page }) => {
-        await test.step('step 1', async () => {
-            await page.locator(btnAddTag).click();
-            await expect(await page.locator(noticeError)).toContainText('A name is required for this term.');
+        tagsPage = new TagsPage(page);
+        await test.step('Click button "Add New Tag"', async () => {
+            tagsPage = new TagsPage(page);
+            await tagsPage.clickButtonAddTag();
+
+            //result
+            await tagsPage.addTagFail(errorMessageRequiredField);
         });
 
-        await test.step('step 2', async () => {
-            await page.locator(addTagName).waitFor();
-            await page.locator(addTagName).click();
-            await page.locator(addTagName).fill(newTagNameF);
-            await page.locator(btnAddTag).click();
-            await expect(await page.locator(noticeError)).toContainText('A term with the name provided already exists in this taxonomy.');
+        await test.step('Điền thông tin tag: name = "lesson tag", click button "Add New Tag', async () => {
+            await tagsPage.inputTagName(newTagNameFail);
+            await tagsPage.clickButtonAddTag();
+
+            //result
+            await tagsPage.addTagFail(errorMessageDuplicate);
         });
     });
 
     test('@POST_TAG_002 - Tag - add tag success', async ({ page }) => {
-        await test.step('step 1', async () => {
-            await page.locator(addTagName).waitFor();
-            await page.locator(addTagName).click();
-            await page.locator(addTagName).fill(newTagName01);
-            await page.locator(btnAddTag).click();
-            await page.locator(noticeSuccess).waitFor();
-            await expect(await page.locator(noticeSuccess)).toContainText('Tag added.');
+        tagsPage = new TagsPage(page);
+        await test.step('Điền thông tin tag: name = "tag {name}" Click button "Add New Tag"', async () => {
+            await tagsPage.inputTagName(newTagName01);
+            await tagsPage.clickButtonAddTag();
+
+            //result
+            await tagsPage.addTagSuccess(messageAddSuccess);
         });
 
-        await test.step('step 2', async () => {
-            await page.locator(addTagName).waitFor();
-            await page.locator(addTagName).click();
-            await page.locator(addTagName).fill(newTagName02);
-            await page.locator(slug).waitFor();
-            await page.locator(slug).click();
-            await page.locator(slug).fill(slug02);
-            await page.locator(btnAddTag).click();
-            await page.locator(noticeSuccess).waitFor();
-            await expect(await page.locator(noticeSuccess)).toContainText('Tag added.');
+        await test.step('Điền thông tin tag: name = "tag {name} 02", slug = "tag-${name}-02"', async () => {
+            await tagsPage.inputTagName(newTagName02);
+            await tagsPage.inputSlug(slug02);
+            await tagsPage.clickButtonAddTag();
+
+            //result
+            await tagsPage.addTagSuccess(messageAddSuccess);
         });
 
-        await test.step('step 3', async () => {
+        await test.step('Teardown: xoá các dữ liệu đã thêm vào', async () => {
             page.on('dialog', async (dialog) => {
                 await dialog.accept();  // Tự động click OK
             });
 
-            await page.locator(search).waitFor();
-            await page.locator(search).fill(textSearch);
-            await page.locator(searchSubmit).click();
+            await tagsPage.inputSearch(textSearch);
+            await tagsPage.clickButtonSearchSubmit();
 
             //delete tag 1
-            await page.locator(itemTag1).waitFor();
-            await page.locator(itemTag1).click();
-            await page.locator(deleteTag).click();
+            await tagsPage.viewDetailItem1();
+            await tagsPage.deleteItem();
             //delete tag 2
-            await page.locator(itemTag2).waitFor();
-            await page.locator(itemTag2).click();
-            await page.locator(deleteTag).click();
+            await tagsPage.viewDetailItem2();
+            await tagsPage.deleteItem();
         });
     });
 
     test('@POST_TAG_003 Tag - slug auto remove special character', async ({ page }) => {
-        await test.step('step 1', async () => {
-            await page.locator(addTagName).waitFor();
-            await page.locator(addTagName).click();
-            await page.locator(addTagName).fill(newTagName03);
-            await page.locator(slug).waitFor();
-            await page.locator(slug).click();
-            await page.locator(slug).fill(slug03);
-            await page.locator(btnAddTag).click();
-            await page.locator(noticeSuccess).waitFor();
-            await expect(await page.locator(noticeSuccess)).toContainText('Tag added.');
+        await test.step('Điền thông tin tag: name = "tag {name} 03", slug = "Đây là tag đặc biệt @100 $200"', async () => {
+            await tagsPage.inputTagName(newTagName03);
+            await tagsPage.inputSlug(slug03);
+            await tagsPage.clickButtonAddTag();
+            //result
+            await tagsPage.addTagSuccess(messageAddSuccess);
         });
 
-        await test.step('step 2', async () => {
-            await page.locator(search).waitFor();
-            await page.locator(search).fill(textSearch);
-            await page.locator(searchSubmit).click();
-            await page.locator(itemTag3).waitFor();
-            await page.locator(itemTag3).click();
+        await test.step('Teardown: xoá các dữ liệu đã thêm vào', async () => {
             page.on('dialog', async (dialog) => {
                 await dialog.accept();  // Tự động click OK
             });
-            await page.locator(deleteTag).click();
+
+            await tagsPage.inputSearch(textSearch);
+            await tagsPage.clickButtonSearchSubmit();
+
+            //delete tag 1
+            await tagsPage.viewDetailItem1();
+            await tagsPage.deleteItem();
         });
     });
 });
