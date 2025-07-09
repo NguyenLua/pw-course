@@ -1,4 +1,7 @@
 import { expect, Page } from "@playwright/test";
+import { TagsPage } from "./tags-page-pw";
+import { CategoriesPage } from "./category-page-pw";
+import { LibrariesPage } from "./library-page-pw";
 
 export class HomePage {
     page: Page;
@@ -22,10 +25,12 @@ export class HomePage {
 
     async goToTagsScreen() {
         await this.page.locator(this.xpathTags).click();
+        return new TagsPage(this.page);
     }
 
     async goToCategoryScreen() {
         await this.page.locator(this.xpathcategories).click();
+        return new CategoriesPage(this.page);
     }
 
     async categoryMedia() {
@@ -34,5 +39,6 @@ export class HomePage {
 
     async goToLibraryScreen() {
         await this.page.locator(this.xpathLibrary).click();
+        return new LibrariesPage(this.page);
     }
 }

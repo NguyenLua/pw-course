@@ -31,4 +31,5 @@ export async function DoLoginSuccess(page) {
     await expect(homePage.page.locator(homePage.xpathDashboard)).toContainText(textDashboard);
     await expect(homePage.page.locator(homePage.xpathAtAGlance)).toContainText(textAtAGlance);
     await expect(homePage.page.locator(homePage.xpathActivity)).toContainText(textActivity);
+    return homePage;
 }
