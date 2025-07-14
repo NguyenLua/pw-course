@@ -3,6 +3,7 @@ import { logInSuccessful } from '../../../fixtures/ui/login.fixture';
 import { HomePage } from '../../../pages/ui/home.page';
 import { POMManager } from '../../../pages/ui/pom-manager';
 import { TagsPage } from '../../../pages/ui/tags.page';
+import { envConf } from '../../../fixtures/ui/envConf.fixture';
 
 const test = logInSuccessful;
 test.describe('POST - Post/Tags', async () => {
@@ -52,10 +53,10 @@ test.describe('POST - Post/Tags', async () => {
             await tagsPage.clickButtonSearchSubmit();
 
             //delete tag 1
-            await tagsPage.viewDetailItem1();
+            await tagsPage.viewDetailItem(tagsPage.xpathItemTag1);
             await tagsPage.deleteItem();
             //delete tag 2
-            await tagsPage.viewDetailItem2();
+            await tagsPage.viewDetailItem(tagsPage.xpathItemTag2);
             await tagsPage.deleteItem();
         });
     });

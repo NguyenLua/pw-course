@@ -10,7 +10,6 @@ export class TagsPage {
     xpathNoticeSuccess = '//*[@class="notice notice-success is-dismissible"]';
     xpathItemTag1 = '//tr[.//a[text()="tag Nguyen Lua"]]//a[@class="row-title"]';
     xpathItemTag2 = '//tr[.//a[text()="tag Nguyen Lua 02"]]//a[@class="row-title"]';
-    xpathItemTag3 = '//tr[.//a[text()="tag Nguyen Lua 03"]]//a[@class="row-title"]';
     xpathButtonDeleteTag = '//*[@id ="delete-link"]';
     xpathSearch = '//*[@id="tag-search-input"]';
     xpathButtonSearchSubmit = '//*[@id="search-submit"]';
@@ -20,14 +19,10 @@ export class TagsPage {
     }
 
     async inputTagName(tagName: string) {
-        await this.page.locator(this.xpathAddTagName).waitFor();
-        await this.page.locator(this.xpathAddTagName).click();
         await this.page.locator(this.xpathAddTagName).fill(tagName)
     }
 
     async inputSlug(slug: string) {
-        await this.page.locator(this.xpathSlug).waitFor();
-        await this.page.locator(this.xpathSlug).click();
         await this.page.locator(this.xpathSlug).fill(slug);
     }
 
@@ -35,26 +30,15 @@ export class TagsPage {
         await this.page.locator(this.xpathButtonAddTag).click();
     }
     async inputSearch(textSearch: string) {
-        await this.page.locator(this.xpathSearch).waitFor();
         await this.page.locator(this.xpathSearch).fill(textSearch);
+
     }
     async clickButtonSearchSubmit() {
         await this.page.locator(this.xpathButtonSearchSubmit).click();
     }
 
-    async viewDetailItem1() {
-        await this.page.locator(this.xpathItemTag1).waitFor();
-        await this.page.locator(this.xpathItemTag1).click();
-    }
-
-    async viewDetailItem2() {
-        await this.page.locator(this.xpathItemTag2).waitFor();
-        await this.page.locator(this.xpathItemTag2).click();
-    }
-
-    async viewDetailItem3() {
-        await this.page.locator(this.xpathItemTag3).waitFor();
-        await this.page.locator(this.xpathItemTag3).click();
+    async viewDetailItem(xpathItemTag: string) {
+        await this.page.locator(xpathItemTag).click();
     }
 
     async deleteItem() {

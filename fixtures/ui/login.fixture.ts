@@ -3,8 +3,28 @@ import { HomePage } from '../../pages/ui/home.page';
 import { LoginPage } from '../../pages/ui/login.page';
 import { POMManager } from '../../pages/ui/pom-manager';
 
-const logInSuccessful = base.extend<{ dashboard: Page }>({
-    dashboard: async ({ page }, use) => {
+type fixtures = {
+    dashboard: Page;
+    envConf: EnvConf
+}
+class EnvConf {
+    getValue(keyPrefix: string) {
+        let keyPostFix = "_PROD";
+        if (process.env.ENV === "dev") {
+            keyPostFix = "_DEV";
+        }
+        return process.env[`${keyPrefix}${keyPostFix}`];
+    }
+}
+
+const logInSuccessful = base.extend<fixtures>({
+
+    envConf: async ({ }, use) => {
+        const envConf = new EnvConf();
+        await use(envConf);
+    },
+
+    dashboard: async ({ page, envConf }, use) => {
 
         let pomManager: POMManager;
         let loginPage: LoginPage;
@@ -14,7 +34,7 @@ const logInSuccessful = base.extend<{ dashboard: Page }>({
         const userNameSuccess = 'p103-lua';
         const passwordSuccess = 'xyg&7E9uQSavPoQIUF7Jl0bw';
 
-        const url = 'https://pw-practice-dev.playwrightvn.com/wp-admin';
+        const url = envConf.getValue('URL') ?? '';
         const textDashboard = 'Dashboard';
         const textAtAGlance = 'At a Glance';
         const textActivity = 'Activity';
@@ -35,6 +55,6 @@ const logInSuccessful = base.extend<{ dashboard: Page }>({
 
         await use(homePage.page);
     }
-});
+})
 
 export { logInSuccessful };
