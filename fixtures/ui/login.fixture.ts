@@ -33,8 +33,7 @@ const logInSuccessful = base.extend<fixtures>({
         //Data Lgoin Success.
         const userNameSuccess = 'p103-lua';
         const passwordSuccess = 'xyg&7E9uQSavPoQIUF7Jl0bw';
-
-        const url = envConf.getValue('URL') ?? '';
+        const url = envConf.getValue('URL') ?? ''; 
         const textDashboard = 'Dashboard';
         const textAtAGlance = 'At a Glance';
         const textActivity = 'Activity';

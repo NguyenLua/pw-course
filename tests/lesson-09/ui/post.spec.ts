@@ -3,7 +3,6 @@ import { logInSuccessful } from '../../../fixtures/ui/login.fixture';
 import { HomePage } from '../../../pages/ui/home.page';
 import { POMManager } from '../../../pages/ui/pom-manager';
 import { TagsPage } from '../../../pages/ui/tags.page';
-import { envConf } from '../../../fixtures/ui/envConf.fixture';
 
 const test = logInSuccessful;
 test.describe('POST - Post/Tags', async () => {
